@@ -4,11 +4,11 @@
 - Install Node
 - Install MongoDB
 - Start MonogoDB
+    - sudo systemctl start mongod
+
 ### Run the development server
 
 ```bash
-npm run dev
-# or
 yarn dev
 ```
 
