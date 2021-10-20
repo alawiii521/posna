@@ -1,27 +1,24 @@
 import { hash, compare } from "bcrypt";
+import getDB from "./db";
 const saltRounds = 10;
 
-const db: { [key: string]: { username: string; password: string } } = {};
-
-async function signup(username: string, password: string) {
+async function signup(username: string, password: string): Promise<string> {
   const hashedPassword = await hash(password, saltRounds);
-  db[username] = {
+  const db = await getDB();
+  const userDoc = new db.models.User({
+    _id: username,
     username,
     password: hashedPassword,
-  };
+  });
+
+  await userDoc.save();
+
+  return username;
 }
 
 async function login(username: string, password: string): Promise<boolean> {
-  const hashedPassword = db[username]?.password;
-  if (!hashedPassword) {
-    return false;
-  }
-  return await compare(password, hashedPassword);
+  return false;
 }
 
-function getDB() {
-  return db;
-}
-
-const AuthDB = { login, signup, getDB };
+const AuthDB = { login, signup };
 export default AuthDB;
